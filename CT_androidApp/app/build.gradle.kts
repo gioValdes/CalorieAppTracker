@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    // Make sure that you have the Google services Gradle plugin
+    id("com.google.gms.google-services")
+    // Add the Crashlytics Gradle plugin
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -40,7 +44,11 @@ android {
 }
 
 dependencies {
-
+    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
+    implementation ("com.google.firebase:firebase-core:17.0.0")
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.google.firebase:firebase-config")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -50,6 +58,10 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
+    testImplementation( "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation ("io.mockk:mockk:1.13.5")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // For coroutine testing
+    testImplementation ("app.cash.turbine:turbine:0.12.1") // For state flow testing
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

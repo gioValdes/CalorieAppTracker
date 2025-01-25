@@ -16,10 +16,10 @@ class FoodViewModel(
     val foodItems: StateFlow<List<FoodItem>> get() = _foodItems
 
     private val sampleFoods = listOf(
-        FoodItem(0, "🍫 Chocolate", 395, System.currentTimeMillis()),
-        FoodItem(1, "🍎 Apple", 95, System.currentTimeMillis()),
-        FoodItem(2, "🍌 Banana", 105, System.currentTimeMillis()),
-        FoodItem(3, "🥪 Sandwich", 250, System.currentTimeMillis())
+        FoodItem(0, "🍫 Chocolate", 395),
+        FoodItem(1, "🍎 Apple", 95),
+        FoodItem(2, "🍌 Banana", 105),
+        FoodItem(3, "🥪 Sandwich", 250)
     )
 
     private var currentIndex = 0
@@ -40,7 +40,7 @@ class FoodViewModel(
         }
     }
 
-    private fun loadFoodItems() {
+    fun loadFoodItems() {
         viewModelScope.launch {
             _foodItems.value = getFoodItemsUseCase()
         }

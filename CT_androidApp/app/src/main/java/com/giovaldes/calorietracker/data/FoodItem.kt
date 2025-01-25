@@ -6,8 +6,7 @@ import com.giovaldes.calorietracker.domain.FoodRepository
 data class FoodItem(
     val id: Int,
     val name: String,
-    val calories: Int,
-    val date: Long // Timestamp for tracking
+    val calories: Int
 )
 
 // --- Use Case ---
