@@ -49,9 +49,16 @@ import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 
+
 var colorStyle = Color.Gray
 
 class MainActivity : ComponentActivity() {
+
+    companion object {
+        private const val STYLE_KEY = "style"
+        private const val ACTIVE_KEY = "active"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
@@ -59,18 +66,21 @@ class MainActivity : ComponentActivity() {
         val colorMap = mapOf(
             "whiteStyle" to Color.White,
             "blackStyle" to Color.Black,
-            "100" to Color.Gray
+            "default" to Color.Gray
         )
 
         val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 3600
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val colorString = remoteConfig.getString("style") ?: "blue"
-                    val bol = remoteConfig.getBoolean("active") ?: false // TODO desactivar usuario
-                    Log.d("colorString", colorString)
-                    val color = colorMap[colorString] ?: Color.Red
+                    val colorString = remoteConfig.getString(STYLE_KEY) ?: "default"
+                    val bol = remoteConfig.getBoolean(ACTIVE_KEY) ?: false // TODO unactive user
+                    val color = colorMap[colorString] ?: Color.Red // TODO red means something went wrong
                     colorStyle = color
 
                     val updated = task.result
