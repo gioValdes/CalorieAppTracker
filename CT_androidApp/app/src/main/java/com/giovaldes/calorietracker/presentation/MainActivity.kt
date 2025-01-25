@@ -82,7 +82,6 @@ class MainActivity : ComponentActivity() {
                     val bol = remoteConfig.getBoolean(ACTIVE_KEY) ?: false // TODO unactive user
                     val color = colorMap[colorString] ?: Color.Red // TODO red means something went wrong
                     colorStyle = color
-
                     val updated = task.result
                     Log.d(TAG, "Config params updated: $updated")
                     Toast.makeText(
