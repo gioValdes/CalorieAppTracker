@@ -57,15 +57,25 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
     testImplementation(libs.junit)
     testImplementation( "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation ("io.mockk:mockk:1.13.5")
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // For coroutine testing
     testImplementation ("app.cash.turbine:turbine:0.12.1") // For state flow testing
+    testImplementation ("com.squareup.okhttp3:mockwebserver:4.12.0") // For unit test
+    androidTestImplementation ("com.squareup.okhttp3:mockwebserver:4.12.0") // For instrumented test
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    // Dependency integrations test
+    androidTestImplementation ("androidx.test:runner:1.5.2")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation ("androidx.test:rules:1.5.0")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.4")
+
 }

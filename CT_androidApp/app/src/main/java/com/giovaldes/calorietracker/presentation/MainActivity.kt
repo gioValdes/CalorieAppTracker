@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         private const val STYLE_KEY = "style"
         private const val ACTIVE_KEY = "active"
+        private const val IS_ALERT_EMOJI_KEY = "isAlertEmoji"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +80,7 @@ class MainActivity : ComponentActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val colorString = remoteConfig.getString(STYLE_KEY) ?: "default"
+                    val logoConfig = remoteConfig.getBoolean(IS_ALERT_EMOJI_KEY) ?: false
                     val bol = remoteConfig.getBoolean(ACTIVE_KEY) ?: false // TODO unactive user
                     val color = colorMap[colorString] ?: Color.Red // TODO red means something went wrong
                     colorStyle = color
