@@ -6,6 +6,7 @@ plugins {
     id("com.google.gms.google-services")
     // Add the Crashlytics Gradle plugin
     id("com.google.firebase.crashlytics")
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1" // Lint
 }
 
 android {
@@ -78,4 +79,10 @@ dependencies {
     androidTestImplementation ("androidx.test:rules:1.5.0")
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.4")
 
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)  // Usa Java 17
+    }
 }
