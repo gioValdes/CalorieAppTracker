@@ -43,7 +43,7 @@ class RemoteConfigInstrumentedTest {
         mockWebServer.enqueue(MockResponse().setBody(jsonResponse))
 
         // Verifica que el color de fondo se haya actualizado correctamente
-        composeTestRule.onNodeWithText("🚨 Calorie Tracker 🚨")
+        composeTestRule.onNodeWithText("Calorie Tracker")
             .assertExists()
     }
 }

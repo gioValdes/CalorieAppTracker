@@ -31,29 +31,32 @@ class ExampleInstrumentedTest {
 
     @Test
     fun testInitialUIState() {
-        // Verifica que el texto "🚨 Calorie Tracker 🚨" esté visible
-        composeTestRule.onNodeWithText("🚨 Calorie Tracker 🚨").assertExists()
+        val totalCaloriesText = composeTestRule.activity.getString(R.string.total_calories)
+        // Verifica que el texto "Calorie Tracker" esté visible
+        composeTestRule.onNodeWithText("Calorie Tracker").assertExists()
 
         // Verifica que el texto "Total Calories: 0" esté visible
-        composeTestRule.onNodeWithText("Total Calories: 0").assertExists()
+        composeTestRule.onNodeWithText("$totalCaloriesText : 0").assertExists()
     }
 
     @Test
     fun testAddFoodItem() {
+        val totalCaloriesText = composeTestRule.activity.getString(R.string.total_calories)
         // Haz clic en el botón de agregar comida
         composeTestRule.onNodeWithText("+").performClick()
 
         // Verifica que se haya agregado un ítem de comida
-        composeTestRule.onNodeWithText("Total Calories: 395").assertExists()
+        composeTestRule.onNodeWithText("$totalCaloriesText : 395").assertExists()
     }
 
     @Test
     fun testTotalCaloriesUpdate() {
+        val totalCaloriesText = composeTestRule.activity.getString(R.string.total_calories)
         // Haz clic en el botón de agregar comida dos veces
         composeTestRule.onNodeWithText("+").performClick()
         composeTestRule.onNodeWithText("+").performClick()
 
         // Verifica que el total de calorías se haya actualizado correctamente
-        composeTestRule.onNodeWithText("Total Calories: 490").assertExists()
+        composeTestRule.onNodeWithText("$totalCaloriesText : 490").assertExists()
     }
 }

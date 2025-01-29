@@ -1,18 +1,18 @@
 package com.giovaldes.calorietracker.presentation
 
 import FoodViewModel
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,14 +20,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,21 +42,9 @@ import com.giovaldes.calorietracker.data.GetFoodItemsUseCase
 import com.giovaldes.calorietracker.domain.FoodDataSource
 import com.giovaldes.calorietracker.domain.FoodRepositoryImpl
 import com.giovaldes.calorietracker.ui.theme.CalorieTrackerTheme
-import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.remoteConfig
-import com.google.firebase.remoteconfig.remoteConfigSettings
-
-var colorStyle = Color.Gray
 
 class MainActivity : ComponentActivity() {
-
-    companion object {
-        private const val STYLE_KEY = "style"
-        private const val ACTIVE_KEY = "active"
-        private const val IS_ALERT_EMOJI_KEY = "isAlertEmoji"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,53 +56,19 @@ class MainActivity : ComponentActivity() {
             WindowManager.LayoutParams.FLAG_SECURE
         )
 
-        val colorMap = mapOf(
-            "whiteStyle" to Color.White,
-            "blackStyle" to Color.Black,
-            "default" to Color.Gray
-        )
-
-        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3600
-        }
-        remoteConfig.setConfigSettingsAsync(configSettings)
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val colorString = remoteConfig.getString(STYLE_KEY) ?: "default"
-                    val logoConfig = remoteConfig.getBoolean(IS_ALERT_EMOJI_KEY) ?: false
-                    val bol = remoteConfig.getBoolean(ACTIVE_KEY) ?: false // TODO unactive user
-                    val color = colorMap[colorString] ?: Color.Red // TODO red means something went wrong
-                    colorStyle = color
-                    val updated = task.result
-                    Log.d(TAG, "Config params updated: $updated")
-                    Toast.makeText(
-                        this,
-                        "Fetch and activate succeeded",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Fetch failed",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
         val dataSource = FoodDataSource()
         val repository = FoodRepositoryImpl(dataSource)
         val addFoodItemUseCase = AddFoodItemUseCase(repository)
         val getFoodItemsUseCase = GetFoodItemsUseCase(repository)
-        val viewModel = FoodViewModel(addFoodItemUseCase, getFoodItemsUseCase)
+        val foodViewModel = FoodViewModel(addFoodItemUseCase, getFoodItemsUseCase)
+        val mainViewModel = MainViewModel(application)
 
         setContent {
             CalorieTrackerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     FoodTrackerScreen(
-                        viewModel = viewModel,
+                        mainViewModel = mainViewModel,
+                        foodViewModel = foodViewModel,
                         paddingValues = innerPadding
                     )
                 }
@@ -120,16 +79,29 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun FoodTrackerScreen(
-    viewModel: FoodViewModel,
+    mainViewModel: MainViewModel,
+    foodViewModel: FoodViewModel,
     paddingValues: PaddingValues
 ) {
-    val foodItems = viewModel.foodItems.collectAsState(initial = emptyList()).value
-    val totalCalories = viewModel.totalCaloriesFlow.collectAsState(initial = 0).value
+    val foodItems = foodViewModel.foodItems.collectAsState(initial = emptyList()).value
+    val totalCalories = foodViewModel.totalCaloriesFlow.collectAsState(initial = 0).value
+    val totalCaloriesText = stringResource(R.string.total_calories)
+    val backgroundColor = mainViewModel.colorStyle.collectAsState(initial = Color.Gray).value
+    val isActive = mainViewModel.isActive.collectAsState(initial = true).value
+    val title = mainViewModel.optionTitle.collectAsState(initial = "Calorie Tracker").value
+    val showAlert = !isActive
+
+    LaunchedEffect(isActive) {
+        if (showAlert) {
+            Toast.makeText(mainViewModel.getApplication(), "Feature is inactive", Toast.LENGTH_LONG)
+                .show()
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.addFoodItem()
+                foodViewModel.addFoodItem()
             }) {
                 Text("+", textAlign = TextAlign.Center)
             }
@@ -138,7 +110,7 @@ fun FoodTrackerScreen(
 
         Column(
             modifier = Modifier
-                .background(colorStyle)
+                .background(backgroundColor)
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(innerPadding)
@@ -146,7 +118,7 @@ fun FoodTrackerScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "🚨 Calorie Tracker 🚨",
+                text = title,
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
@@ -154,7 +126,7 @@ fun FoodTrackerScreen(
             )
 
             Text(
-                text = "Total Calories: $totalCalories",
+                text = "$totalCaloriesText : $totalCalories",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,

@@ -4,9 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     // Make sure that you have the Google services Gradle plugin
     id("com.google.gms.google-services")
-    // Add the Crashlytics Gradle plugin
-    id("com.google.firebase.crashlytics")
+    id("com.google.firebase.crashlytics")  // Crashlytics Gradle plugin
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1" // Lint
+    id("com.github.ben-manes.versions") version "0.47.0" // Dependency version management
 }
 
 android {
@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.giovaldes.calorietracker"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -45,11 +45,11 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
-    implementation("com.google.firebase:firebase-core:17.0.0")
-    implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-config")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.core)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.config)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -58,14 +58,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation(libs.okhttp)
     testImplementation(libs.junit)
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation("io.mockk:mockk:1.13.5")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // For coroutine testing
-    testImplementation("app.cash.turbine:turbine:0.12.1") // For state flow testing
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0") // For unit test
-    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.12.0") // For instrumented test
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test) // For coroutine testing
+    testImplementation(libs.turbine) // For state flow testing
+    testImplementation(libs.mockwebserver) // For unit test
+    androidTestImplementation(libs.mockwebserver) // For instrumented test
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -73,11 +73,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     // Dependency integrations test
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test:rules:1.5.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.ui.test.junit4)
 }
 
 java {
