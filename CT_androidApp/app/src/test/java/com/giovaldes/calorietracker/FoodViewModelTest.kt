@@ -1,19 +1,18 @@
 package com.giovaldes.calorietracker
 
-import io.mockk.*
 import FoodViewModel
 import app.cash.turbine.test
 import com.giovaldes.calorietracker.data.AddFoodItemUseCase
 import com.giovaldes.calorietracker.data.FoodItem
 import com.giovaldes.calorietracker.data.GetFoodItemsUseCase
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Test
-import org.junit.Assert.assertEquals
-import org.junit.Before
 import kotlinx.coroutines.test.*
 import org.junit.After
-
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class FoodViewModelTest {
@@ -23,6 +22,7 @@ class FoodViewModelTest {
     private val getFoodItemsUseCase: GetFoodItemsUseCase = mockk()
 
     private val testDispatcher = UnconfinedTestDispatcher()
+
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)

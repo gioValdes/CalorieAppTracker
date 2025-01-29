@@ -1,18 +1,15 @@
 
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.giovaldes.calorietracker.presentation.MainActivity
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Assert.assertEquals
 
 @RunWith(AndroidJUnit4::class)
 class RemoteConfigInstrumentedTest {
@@ -48,7 +45,5 @@ class RemoteConfigInstrumentedTest {
         // Verifica que el color de fondo se haya actualizado correctamente
         composeTestRule.onNodeWithText("🚨 Calorie Tracker 🚨")
             .assertExists()
-
-
     }
 }
