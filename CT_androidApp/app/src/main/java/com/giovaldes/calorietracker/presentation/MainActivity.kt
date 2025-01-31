@@ -1,11 +1,16 @@
 package com.giovaldes.calorietracker.presentation
 
 import FoodViewModel
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,10 +37,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.giovaldes.calorietracker.R
 import com.giovaldes.calorietracker.data.AddFoodItemUseCase
 import com.giovaldes.calorietracker.data.GetFoodItemsUseCase
@@ -46,6 +53,16 @@ import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Toast.makeText(this, getString(R.string.camera_permission_granted), Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, getString(R.string.camera_permission_denied), Toast.LENGTH_SHORT).show()
+        }
+    }
+    @SuppressLint("ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
@@ -55,6 +72,14 @@ class MainActivity : ComponentActivity() {
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
         )
+
+        // Solicitar permisos en tiempo de ejecución si es necesario
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
 
         val dataSource = FoodDataSource()
         val repository = FoodRepositoryImpl(dataSource)
@@ -83,6 +108,7 @@ fun FoodTrackerScreen(
     foodViewModel: FoodViewModel,
     paddingValues: PaddingValues
 ) {
+    val context = LocalContext.current // Obtén el contexto actual
     val foodItems = foodViewModel.foodItems.collectAsState(initial = emptyList()).value
     val totalCalories = foodViewModel.totalCaloriesFlow.collectAsState(initial = 0).value
     val totalCaloriesText = stringResource(R.string.total_calories)
@@ -93,7 +119,9 @@ fun FoodTrackerScreen(
 
     LaunchedEffect(isActive) {
         if (showAlert) {
-            Toast.makeText(mainViewModel.getApplication(), "Feature is inactive", Toast.LENGTH_LONG)
+            Toast.makeText(
+                context,
+                context.getString(R.string.feature_is_inactive), Toast.LENGTH_LONG)
                 .show()
         }
     }

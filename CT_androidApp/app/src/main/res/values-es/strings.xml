@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">CalorieTracker</string>
     <string name="total_calories">Total Calorias:</string>
+    <string name="camera_permission_granted">Permiso de cámara concedido</string>
+    <string name="camera_permission_denied">Permiso de cámara denegado</string>
+    <string name="feature_is_inactive">Feature is inactive</string>
 </resources>

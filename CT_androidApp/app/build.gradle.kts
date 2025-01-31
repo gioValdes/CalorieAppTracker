@@ -4,9 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     // Make sure that you have the Google services Gradle plugin
     id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")  // Crashlytics Gradle plugin
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1" // Lint
-    id("com.github.ben-manes.versions") version "0.47.0" // Dependency version management
+    id("com.google.firebase.crashlytics") // Crashlytics Gradle plugin
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.2" // Lint
+    id("com.github.ben-manes.versions") version "0.52.0" // Dependency version management
 }
 
 android {
@@ -23,9 +23,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -85,3 +87,4 @@ java {
         languageVersion = JavaLanguageVersion.of(17) // Usa Java 17
     }
 }
+
