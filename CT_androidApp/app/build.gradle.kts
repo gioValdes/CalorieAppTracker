@@ -23,7 +23,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -32,6 +31,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        getByName("debug") {
+            versionNameSuffix = ".debug"
         }
     }
     compileOptions {
@@ -43,6 +45,18 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    flavorDimensions += listOf("enviroment")
+    productFlavors {
+        create("free") {
+            dimension = "enviroment"
+            applicationId = "com.giovaldes.calorietracker"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_free"
+        }
+        create("full") {
+            dimension = "enviroment"
+            applicationId = "com.giovaldes.calorietracker"
+        }
     }
 }
 
@@ -67,14 +81,11 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test) // For coroutine testing
     testImplementation(libs.turbine) // For state flow testing
     testImplementation(libs.mockwebserver) // For unit test
-    androidTestImplementation(libs.mockwebserver) // For instrumented test
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     // Dependency integrations test
+    androidTestImplementation(libs.mockwebserver)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
