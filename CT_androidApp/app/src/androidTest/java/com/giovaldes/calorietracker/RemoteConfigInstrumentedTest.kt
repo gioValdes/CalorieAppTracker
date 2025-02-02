@@ -13,7 +13,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class RemoteConfigInstrumentedTest {
-
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
@@ -33,13 +32,14 @@ class RemoteConfigInstrumentedTest {
     @Test
     fun testRemoteConfigFetch() {
         // Simula una respuesta de Firebase Remote Config
-        val jsonResponse = """
+        val jsonResponse =
+            """
             {
                 "style": "whiteStyle",
                 "active": true,
                 "isAlertEmoji": true
             }
-        """.trimIndent()
+            """.trimIndent()
         mockWebServer.enqueue(MockResponse().setBody(jsonResponse))
 
         // Verifica que el color de fondo se haya actualizado correctamente

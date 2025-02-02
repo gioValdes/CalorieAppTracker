@@ -9,18 +9,18 @@ import kotlinx.coroutines.launch
 
 class FoodViewModel(
     private val addFoodItemUseCase: AddFoodItemUseCase,
-    private val getFoodItemsUseCase: GetFoodItemsUseCase
+    private val getFoodItemsUseCase: GetFoodItemsUseCase,
 ) : ViewModel() {
-
     private val _foodItems = MutableStateFlow<List<FoodItem>>(emptyList())
     val foodItems: StateFlow<List<FoodItem>> get() = _foodItems
 
-    private val sampleFoods = listOf(
-        FoodItem(0, "🍫 Chocolate", 395),
-        FoodItem(1, "🍎 Apple", 95),
-        FoodItem(2, "🍌 Banana", 105),
-        FoodItem(3, "🥪 Sandwich", 250)
-    )
+    private val sampleFoods =
+        listOf(
+            FoodItem(0, "🍫 Chocolate", 395),
+            FoodItem(1, "🍎 Apple", 95),
+            FoodItem(2, "🍌 Banana", 105),
+            FoodItem(3, "🥪 Sandwich", 250),
+        )
 
     private var currentIndex = 0
     private val _totalCalories = MutableStateFlow(0)

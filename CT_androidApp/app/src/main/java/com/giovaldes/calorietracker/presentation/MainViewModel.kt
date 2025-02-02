@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-
     companion object {
         private const val STYLE_KEY = "style"
         private const val ACTIVE_KEY = "active"
@@ -22,11 +21,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val remoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
-    private val colorMap = mapOf(
-        "whiteStyle" to Color.White,
-        "blackStyle" to Color.Black,
-        "default" to Color.Gray
-    )
+    private val colorMap =
+        mapOf(
+            "whiteStyle" to Color.White,
+            "blackStyle" to Color.Black,
+            "default" to Color.Gray,
+        )
 
     private val _colorStyle = MutableStateFlow(Color.Gray)
     val colorStyle: StateFlow<Color> get() = _colorStyle
@@ -42,9 +42,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun setupRemoteConfig() {
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3600
-        }
+        val configSettings =
+            remoteConfigSettings {
+                minimumFetchIntervalInSeconds = 3600
+            }
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(mapOf(STYLE_KEY to "default", ACTIVE_KEY to true, IS_ALERT_EMOJI_KEY to false))
 

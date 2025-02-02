@@ -1,9 +1,9 @@
 package com.giovaldes.calorietracker.presentation
 
 import FoodViewModel
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -52,16 +52,17 @@ import com.giovaldes.calorietracker.ui.theme.CalorieTrackerTheme
 import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            Toast.makeText(this, getString(R.string.camera_permission_granted), Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, getString(R.string.camera_permission_denied), Toast.LENGTH_SHORT).show()
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            if (isGranted) {
+                Toast.makeText(this, getString(R.string.camera_permission_granted), Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, getString(R.string.camera_permission_denied), Toast.LENGTH_SHORT).show()
+            }
         }
-    }
+
     @SuppressLint("ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,13 +71,14 @@ class MainActivity : ComponentActivity() {
         // Evitar capturas de pantalla y previsualización en multitarea
         window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
+            WindowManager.LayoutParams.FLAG_SECURE,
         )
 
         // Solicitar permisos en tiempo de ejecución si es necesario
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
@@ -94,7 +96,7 @@ class MainActivity : ComponentActivity() {
                     FoodTrackerScreen(
                         mainViewModel = mainViewModel,
                         foodViewModel = foodViewModel,
-                        paddingValues = innerPadding
+                        paddingValues = innerPadding,
                     )
                 }
             }
@@ -106,7 +108,7 @@ class MainActivity : ComponentActivity() {
 fun FoodTrackerScreen(
     mainViewModel: MainViewModel,
     foodViewModel: FoodViewModel,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
 ) {
     val context = LocalContext.current // Obtén el contexto actual
     val foodItems = foodViewModel.foodItems.collectAsState(initial = emptyList()).value
@@ -121,7 +123,9 @@ fun FoodTrackerScreen(
         if (showAlert) {
             Toast.makeText(
                 context,
-                context.getString(R.string.feature_is_inactive), Toast.LENGTH_LONG)
+                context.getString(R.string.feature_is_inactive),
+                Toast.LENGTH_LONG,
+            )
                 .show()
         }
     }
@@ -133,24 +137,25 @@ fun FoodTrackerScreen(
             }) {
                 Text("+", textAlign = TextAlign.Center)
             }
-        }
+        },
     ) { innerPadding ->
 
         Column(
-            modifier = Modifier
-                .background(backgroundColor)
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(innerPadding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .background(backgroundColor)
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(innerPadding)
+                    .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
 
             Text(
@@ -158,27 +163,29 @@ fun FoodTrackerScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn(
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier.fillMaxHeight(),
             ) {
                 items(foodItems) { foodItem ->
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(text = foodItem.name, fontSize = 18.sp)
                             Text(text = "${foodItem.calories} cal", fontSize = 18.sp)

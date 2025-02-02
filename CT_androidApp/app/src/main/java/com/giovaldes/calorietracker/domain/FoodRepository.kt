@@ -4,6 +4,7 @@ import com.giovaldes.calorietracker.data.FoodItem
 
 interface FoodRepository {
     suspend fun addFoodItem(foodItem: FoodItem)
+
     suspend fun getFoodItems(): List<FoodItem>
 }
 
