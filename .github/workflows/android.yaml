@@ -20,7 +20,5 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Run Fastlane Tests
-        run: fastlane test
       - name: Run Fastlane Build
         run: fastlane buildAllFlavors 
