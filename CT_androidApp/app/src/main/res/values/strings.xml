@@ -4,4 +4,5 @@
     <string name="camera_permission_granted">Camera permission granted</string>
     <string name="camera_permission_denied">Camera permission denied</string>
     <string name="feature_is_inactive">Feature is inactive</string>
+    <string name="week_3">Week 3</string>
 </resources>

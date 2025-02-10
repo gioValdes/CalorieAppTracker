@@ -11,12 +11,12 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +29,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +50,7 @@ import com.giovaldes.calorietracker.data.GetFoodItemsUseCase
 import com.giovaldes.calorietracker.domain.FoodDataSource
 import com.giovaldes.calorietracker.domain.FoodRepositoryImpl
 import com.giovaldes.calorietracker.ui.theme.CalorieTrackerTheme
+import com.giovaldes.calorietracker.ui.theme.Pink80
 import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
@@ -105,6 +107,54 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun BarChartScreen(modifier: Modifier = Modifier) {
+    val data = listOf(10f, 30f, 50f, 20f, 40f, 5f, 55f)
+
+    Column(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            stringResource(R.string.week_3),
+            style = MaterialTheme.typography.labelSmall,
+            textAlign = TextAlign.Start,
+            color = Pink80,
+            modifier =
+                Modifier
+                    .align(Alignment.Start)
+                    .padding(bottom = 8.dp),
+        )
+
+        Canvas(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+        ) {
+            val barWidth = size.width / (data.size * 1.2)
+            val maxData = data.maxOrNull() ?: 1f
+
+            data.forEachIndexed { index, value ->
+                val barHeight = (value / maxData) * size.height
+                drawRoundRect(
+                    color = Pink80,
+                    topLeft =
+                        androidx.compose.ui.geometry.Offset(
+                            x = ((index * barWidth * 1.2f).toFloat()),
+                            y = size.height - barHeight,
+                        ),
+                    size = androidx.compose.ui.geometry.Size(barWidth.toFloat(), barHeight),
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(8f),
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun FoodTrackerScreen(
     mainViewModel: MainViewModel,
     foodViewModel: FoodViewModel,
@@ -152,21 +202,27 @@ fun FoodTrackerScreen(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.headlineMedium.copy(color = Color.Unspecified),
+                color = colorScheme.primary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 16.dp),
             )
 
             Text(
-                text = "$totalCaloriesText : $totalCalories",
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.secondary,
+                text = "$totalCaloriesText $totalCalories",
+                style = MaterialTheme.typography.headlineSmall.copy(color = Color.Unspecified),
+                color = colorScheme.secondary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 16.dp),
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            BarChartScreen(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(bottom = 16.dp),
+            )
 
             LazyColumn(
                 modifier = Modifier.fillMaxHeight(),

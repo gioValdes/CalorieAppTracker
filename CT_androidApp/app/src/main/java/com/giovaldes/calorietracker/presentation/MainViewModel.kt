@@ -24,7 +24,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val colorMap =
         mapOf(
             "whiteStyle" to Color.White,
-            "blackStyle" to Color.Black,
+            "blackStyle" to Color.DarkGray,
             "default" to Color.Gray,
         )
 
