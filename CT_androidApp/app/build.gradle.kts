@@ -13,15 +13,6 @@ android {
     namespace = "com.giovaldes.calorietracker"
     compileSdk = 35
 
-    signingConfigs {
-        create("release") {
-            storeFile = file(System.getenv("MYAPP_KEYSTORE_PATH") ?: project.findProperty("MYAPP_KEYSTORE_PATH") as String)
-            storePassword = System.getenv("MYAPP_KEYSTORE_PASSWORD") ?: project.findProperty("MYAPP_KEYSTORE_PASSWORD") as String
-            keyAlias = System.getenv("MYAPP_KEY_ALIAS") ?: project.findProperty("MYAPP_KEY_ALIAS") as String
-            keyPassword = System.getenv("MYAPP_KEY_PASSWORD") ?: project.findProperty("MYAPP_KEY_PASSWORD") as String
-        }
-    }
-
     defaultConfig {
         applicationId = "com.giovaldes.calorietracker"
         minSdk = 23
@@ -36,7 +27,6 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -44,7 +34,6 @@ android {
         }
         debug {
             versionNameSuffix = ".debug"
-            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
