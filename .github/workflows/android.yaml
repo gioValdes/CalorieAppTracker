@@ -14,8 +14,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Clona todo el historial (útil para versiones de Gradle o Fastlane)
-          token: ${{ secrets.GITHUB_TOKEN }}  # 🔹 Usa el token de GitHub para autenticación
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Git user
         run: |
@@ -37,7 +37,10 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Install Fastlane
-        run: gem install fastlane  # 🔹 Instala Fastlane si no está en el runner
+        run: gem install --user-install fastlane
+
+      - name: Add Fastlane to PATH
+        run: echo "export PATH=\"$HOME/.gem/ruby/3.2.0/bin:$PATH\"" >> $HOME/.bashrc && source $HOME/.bashrc
 
       - name: Run Fastlane Build
         run: fastlane buildAllFlavors
