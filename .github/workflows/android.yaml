@@ -8,12 +8,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Fix Git permissions
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Clona todo el historial (útil para versiones de Gradle o Fastlane)
+          token: ${{ secrets.GITHUB_TOKEN }}  # 🔹 Usa el token de GitHub para autenticación
+
+      - name: Configure Git user
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
+
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
@@ -21,5 +35,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Install Fastlane
+        run: gem install fastlane  # 🔹 Instala Fastlane si no está en el runner
+
       - name: Run Fastlane Build
-        run: fastlane buildAllFlavors 
+        run: fastlane buildAllFlavors
