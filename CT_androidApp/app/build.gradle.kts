@@ -13,20 +13,11 @@ android {
     namespace = "com.giovaldes.calorietracker"
     compileSdk = 35
 
-    signingConfigs {
-        create("release") {
-            storeFile = file(System.getenv("MYAPP_KEYSTORE_PATH") ?: project.findProperty("MYAPP_KEYSTORE_PATH") as String)
-            storePassword = System.getenv("MYAPP_KEYSTORE_PASSWORD") ?: project.findProperty("MYAPP_KEYSTORE_PASSWORD") as String
-            keyAlias = System.getenv("MYAPP_KEY_ALIAS") ?: project.findProperty("MYAPP_KEY_ALIAS") as String
-            keyPassword = System.getenv("MYAPP_KEY_PASSWORD") ?: project.findProperty("MYAPP_KEY_PASSWORD") as String
-        }
-    }
-
     defaultConfig {
         applicationId = "com.giovaldes.calorietracker"
         minSdk = 23
         targetSdk = 35
-        versionCode = 3
+        versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -36,13 +27,12 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
         }
-        debug {
+        getByName("debug") {
             versionNameSuffix = ".debug"
         }
     }
@@ -55,23 +45,32 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true // Habilita la generación de BuildConfig
     }
-    flavorDimensions += listOf("enviroment")
+    flavorDimensions += listOf("environment")
     productFlavors {
         create("free") {
-            dimension = "enviroment"
+            manifestPlaceholders += mapOf()
+            dimension = "environment"
             applicationId = "com.giovaldes.calorietracker"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_free"
         }
         create("full") {
-            dimension = "enviroment"
+            dimension = "environment"
             applicationId = "com.giovaldes.calorietracker"
+            buildConfigField("String", "BASE_URL", "\"https://production.api.tuapp.com/\"")
+        }
+        create("staging") {
+            dimension = "environment"
+            applicationId = "com.giovaldes.calorietracker"
+            buildConfigField("String", "BASE_URL", "\"https://staging.api.tuapp.com/\"")
         }
     }
 }
 
 dependencies {
     implementation(platform(libs.firebase.bom))
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.firebase.core)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
@@ -85,8 +84,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.okhttp)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.androidx.foundation)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
