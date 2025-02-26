@@ -16,6 +16,14 @@
 default_platform(:android)
 
   platform :android do
+
+    desc "Run tests and build all flavors"
+    lane :full_pipeline do
+      test
+      buildAllFalvors
+    end
+
+
     desc "Runs all the tests"
     lane :test do
       gradle(task: "test")
