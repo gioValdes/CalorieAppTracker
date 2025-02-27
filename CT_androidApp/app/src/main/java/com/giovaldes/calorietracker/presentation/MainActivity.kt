@@ -200,6 +200,23 @@ fun FoodTrackerScreen(
                     .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            // Banner promocional
+            if (!showAlert) {
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xff0AEA8A))
+                ) {
+                    Text(
+                        text = " 🔥¡Nueva sección disponible! \uD83D\uDD25         Arma tu dieta",
+                        style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineMedium.copy(color = Color.Unspecified),
