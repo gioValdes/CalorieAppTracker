@@ -1,12 +1,17 @@
-name: CI for Android
+name: Android CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Fix Git permissions
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -44,3 +49,4 @@ jobs:
 
       - name: Run Fastlane Build
         run: fastlane buildAllFlavors
+

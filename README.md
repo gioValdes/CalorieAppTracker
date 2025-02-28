@@ -44,6 +44,31 @@ CalorieTracker/
 
 ```
 
+### Git flow
+
+```plaintext
+├── main/
+│   └── Código listo para producción
+│       ├── Versiones estables
+│       └── Releases finales
+├── develop/
+│   └── Rama principal de desarrollo
+│       ├── Integración de features
+│       └── Preparación para releases
+├── feature/
+│   ├── feature/login
+│   ├── feature/dashboard
+│   └── feature/settings
+├── release/
+│   └── Preparación para producción
+│       ├── Pruebas finales
+│       └── Corrección de bugs menores
+└── hotfix/
+    ├── hotfix/crash-on-login
+    └── hotfix/typo-in-ui
+
+```
+
 ## Installation
 
 To explore the project locally, follow these steps:
