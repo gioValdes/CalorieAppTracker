@@ -26,7 +26,7 @@ android {
         applicationId = "com.giovaldes.calorietracker"
         minSdk = 23
         targetSdk = 35
-        versionCode = 3
+        versionCode = 6
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -72,6 +72,7 @@ android {
 
 dependencies {
     implementation(platform(libs.firebase.bom))
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.firebase.core)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)

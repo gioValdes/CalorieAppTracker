@@ -13,19 +13,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Fix Git permissions
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          ruby-version: '3.2'
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git user
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Install Fastlane
-        run: gem install fastlane
+        run: gem install --user-install fastlane
 
-      - name: Run Fastlane
-        run: fastlane android beta
-        env:
-          FASTLANE_SKIP_UPDATE_CHECK: true
-          FASTLANE_DISABLE_COLORS: true
+      - name: Add Fastlane to PATH
+        run: echo "export PATH=\"$HOME/.gem/ruby/3.2.0/bin:$PATH\"" >> $HOME/.bashrc && source $HOME/.bashrc
+
+      - name: Run Fastlane Build
+        run: fastlane buildAllFlavors
+
